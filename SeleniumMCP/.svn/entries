@@ -1,0 +1,154 @@
+10
+
+dir
+1043
+svn://subversion/Products/Selenium_MCP/trunk/SeleniumMCP
+svn://subversion
+
+
+
+2012-02-08T20:34:13.705375Z
+1004
+
+has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+dc2bc975-a8e5-db43-ba27-88a14b14de9b
+
+Visual Studio 2005Templates
+dir
+
+Visual Studio 2005
+dir
+
+SeleniumMCP.vbproj
+file
+
+
+
+
+2012-02-09T17:24:04.647847Z
+0e3f4329821adec7641724d6c307a32e
+2012-02-08T20:34:13.705375Z
+1004
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+8895
+
+app.config
+file
+
+
+
+
+2012-02-09T17:24:04.725977Z
+d437c0576d9094543089cdd832a0915a
+2012-01-25T20:57:58.642625Z
+985
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+1798
+
+Forms
+dir
+
+Modules
+dir
+
+Resources
+dir
+
+My Project
+dir
+
+Visual Studio 2005Projects
+dir
+
+Classes
+dir
+
+ApplicationEvents.vb
+file
+
+
+
+
+2012-02-09T17:24:04.772855Z
+d41d8cd98f00b204e9800998ecf8427e
+2012-01-25T20:57:58.642625Z
+985
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+0
+
