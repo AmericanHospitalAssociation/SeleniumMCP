@@ -1,0 +1,411 @@
+#Region "Compile Options"
+Option Strict On
+Option Explicit On
+#End Region
+
+#Region "Import Namespaces"
+Imports OpenQA.Selenium.Firefox
+Imports OpenQA.Selenium.IE
+Imports OpenQA.Selenium.Chrome
+Imports OpenQA.Selenium
+Imports OpenQA.Selenium.Support.UI
+Imports Selenium.DefaultSelenium
+Imports System.Collections.ObjectModel
+Imports SNAGITLib
+Imports MosaicDBAccess
+#End Region
+
+Public Class ClassFunctions
+#Region "Private variables"
+    Private driver As IWebDriver 'interface contract...generic object to invoke Selenium actions
+    Private snagIt As SNAGITLib.IImageCapture2 = New SNAGITLib.ImageCaptureClass() 'using IImageCapture2 to get new functionality in SnagIt 8.1
+#End Region
+
+#Region "Custom Selenium functions"
+    Public Function ta_launch_browser(ByVal mcpParameters() As Object) As Object()
+        Dim returnValues() As Object = New Object() {executionStatusPassed, ""}
+        Dim excelPath As String = CType(mcpParameters(0), String)
+        Dim iteration As Integer = CType(mcpParameters(1), Integer)
+        Dim executableHistoryRecordID As Integer = CType(mcpParameters(2), Integer)
+        Dim actionHistoryRecordID As Integer = CType(mcpParameters(3), Integer)
+        Try
+            Dim logPath As String = My.Computer.FileSystem.CombinePath(My.Computer.FileSystem.GetParentPath(excelPath), executionLog)
+
+            'open a new browser and open a blank page
+            Select Case mosaicDll.dt(excelPath, iteration, "browser", "Browser").ToLower.Trim
+                Case "firefox"
+                    returnValues(1) = "Using Firefox browser."
+                    driver = New Firefox.FirefoxDriver
+                    mosaicDll.Logger(senderMCPAction, "Actual Result|Launched Firefox", logPath, , actionHistoryRecordID)
+                Case "chrome"
+                    returnValues(1) = "Using Chrome browser."
+                    driver = New Chrome.ChromeDriver
+                    mosaicDll.Logger(senderMCPAction, "Actual Result|Launched Chrome", logPath, , actionHistoryRecordID)
+                Case Else
+                    returnValues(1) = "Using Internet Explorer browser."
+                    driver = New IE.InternetExplorerDriver
+                    mosaicDll.Logger(senderMCPAction, "Actual Result|Launched Internet Explorer", logPath, , actionHistoryRecordID)
+            End Select
+            driver.Navigate().GoToUrl(mosaicDll.dt(excelPath, iteration, "url", "Target_page"))
+            mosaicDll.Logger(senderMCPAction, "Actual Result|Navigated to " & mosaicDll.dt(excelPath, iteration, "url", "Target_page"), logPath, , actionHistoryRecordID)
+            System.Threading.Thread.Sleep(500)
+            Return returnValues
+        Catch ex As Exception
+            returnValues(0) = executionStatusFailed
+            returnValues(1) = returnValues(1).ToString & "  " & ex.Message
+            Return returnValues
+        End Try
+    End Function
+
+    Public Function ta_close_browser(ByVal mcpParameters() As Object) As Object()
+        Dim returnValues() As Object = New Object() {executionStatusPassed, ""}
+        Dim excelPath As String = CType(mcpParameters(0), String)
+        Dim iteration As Integer = CType(mcpParameters(1), Integer)
+        Dim executableHistoryRecordID As Integer = CType(mcpParameters(2), Integer)
+        Dim actionHistoryRecordID As Integer = CType(mcpParameters(3), Integer)
+        Try
+            Dim logPath As String = My.Computer.FileSystem.CombinePath(My.Computer.FileSystem.GetParentPath(excelPath), executionLog)
+
+            'close the browser
+            driver.Close()
+            mosaicDll.Logger(senderMCPAction, "Actual Result|Closed Browser", logPath, , actionHistoryRecordID)
+            Return returnValues
+        Catch ex As Exception
+            returnValues(0) = executionStatusFailed
+            returnValues(1) = ex.Message
+            Return returnValues
+        End Try
+    End Function
+
+    Public Function ta_select_menu_option(ByVal mcpParameters() As Object) As Object()
+        Dim returnValues() As Object = New Object() {executionStatusPassed, ""}
+        Dim excelPath As String = CType(mcpParameters(0), String)
+        Dim iteration As Integer = CType(mcpParameters(1), Integer)
+        Dim executableHistoryRecordID As Integer = CType(mcpParameters(2), Integer)
+        Dim actionHistoryRecordID As Integer = CType(mcpParameters(3), Integer)
+        Try
+            Dim logPath As String = My.Computer.FileSystem.CombinePath(My.Computer.FileSystem.GetParentPath(excelPath), executionLog)
+
+            'locate an element and click it
+            driver.FindElement(By.XPath(mosaicDll.dt(excelPath, iteration, "menu_selection", "Link_Path"))).Click()
+            mosaicDll.Logger(senderMCPAction, "Actual Result|Clicked " & mosaicDll.dt(excelPath, iteration, "menu_selection", "Tab_name"), logPath, , actionHistoryRecordID)
+            System.Threading.Thread.Sleep(500)
+            Return returnValues
+        Catch ex As Exception
+            returnValues(0) = executionStatusFailed
+            returnValues(1) = ex.Message
+            Return returnValues
+        End Try
+    End Function
+
+    Public Function ta_request_form_link(ByVal mcpParameters() As Object) As Object()
+        Dim returnValues() As Object = New Object() {executionStatusPassed, ""}
+        Dim excelPath As String = CType(mcpParameters(0), String)
+        Dim iteration As Integer = CType(mcpParameters(1), Integer)
+        Dim executableHistoryRecordID As Integer = CType(mcpParameters(2), Integer)
+        Dim actionHistoryRecordID As Integer = CType(mcpParameters(3), Integer)
+        Try
+            Dim logPath As String = My.Computer.FileSystem.CombinePath(My.Computer.FileSystem.GetParentPath(excelPath), executionLog)
+
+            'click a hyperlink
+            driver.FindElement(By.LinkText(mosaicDll.dt(excelPath, iteration, "menu_selection", "Link_Path"))).Click()
+            mosaicDll.Logger(senderMCPAction, "Actual Result|Clicked " & mosaicDll.dt(excelPath, iteration, "menu_selection", "Tab_name"), logPath, , actionHistoryRecordID)
+            System.Threading.Thread.Sleep(500)
+            Return returnValues
+        Catch ex As Exception
+            returnValues(0) = executionStatusFailed
+            returnValues(1) = ex.Message
+            Return returnValues
+        End Try
+    End Function
+
+    Public Function ta_enter_data(ByVal mcpParameters() As Object) As Object()
+        Dim returnValues() As Object = New Object() {executionStatusPassed, ""}
+        Dim excelPath As String = CType(mcpParameters(0), String)
+        Dim iteration As Integer = CType(mcpParameters(1), Integer)
+        Dim executableHistoryRecordID As Integer = CType(mcpParameters(2), Integer)
+        Dim actionHistoryRecordID As Integer = CType(mcpParameters(3), Integer)
+        Try
+            Dim logPath As String = My.Computer.FileSystem.CombinePath(My.Computer.FileSystem.GetParentPath(excelPath), executionLog)
+
+            'enter first name
+            driver.FindElement(By.Id("FormsEditField1")).SendKeys(mosaicDll.dt(excelPath, iteration, "form_data", "First_Name"))
+            mosaicDll.Logger(senderMCPAction, "Actual Result|Entered First Name: " & mosaicDll.dt(excelPath, iteration, "form_data", "First_Name"), logPath, , actionHistoryRecordID)
+
+            'enter last name
+            driver.FindElement(By.Id("FormsEditField9")).SendKeys(mosaicDll.dt(excelPath, iteration, "form_data", "Last_Name"))
+            mosaicDll.Logger(senderMCPAction, "Actual Result|Entered Last Name: " & mosaicDll.dt(excelPath, iteration, "form_data", "Last_Name"), logPath, , actionHistoryRecordID)
+
+            'enter company
+            driver.FindElement(By.Id("FormsEditField2")).SendKeys(mosaicDll.dt(excelPath, iteration, "form_data", "Company"))
+            mosaicDll.Logger(senderMCPAction, "Actual Result|Entered Company: " & mosaicDll.dt(excelPath, iteration, "form_data", "Company"), logPath, , actionHistoryRecordID)
+
+            'enter title
+            driver.FindElement(By.Id("FormsEditField10")).SendKeys(mosaicDll.dt(excelPath, iteration, "form_data", "Title"))
+            mosaicDll.Logger(senderMCPAction, "Actual Result|Entered Title: " & mosaicDll.dt(excelPath, iteration, "form_data", "Title"), logPath, , actionHistoryRecordID)
+
+            'enter address 1
+            driver.FindElement(By.Id("FormsEditField4")).SendKeys(mosaicDll.dt(excelPath, iteration, "form_data", "Address1"))
+            mosaicDll.Logger(senderMCPAction, "Actual Result|Entered Address1: " & mosaicDll.dt(excelPath, iteration, "form_data", "Address1"), logPath, , actionHistoryRecordID)
+
+            'enter address 2
+            driver.FindElement(By.Id("FormsEditField5")).SendKeys(mosaicDll.dt(excelPath, iteration, "form_data", "Address2"))
+            mosaicDll.Logger(senderMCPAction, "Actual Result|Entered Address2: " & mosaicDll.dt(excelPath, iteration, "form_data", "Address2"), logPath, , actionHistoryRecordID)
+
+            'enter city
+            driver.FindElement(By.Id("FormsEditField8")).SendKeys(mosaicDll.dt(excelPath, iteration, "form_data", "City"))
+            mosaicDll.Logger(senderMCPAction, "Actual Result|Entered City: " & mosaicDll.dt(excelPath, iteration, "form_data", "City"), logPath, , actionHistoryRecordID)
+
+            'enter state
+            driver.FindElement(By.Id("FormsEditField11")).SendKeys(mosaicDll.dt(excelPath, iteration, "form_data", "State"))
+            mosaicDll.Logger(senderMCPAction, "Actual Result|Entered State: " & mosaicDll.dt(excelPath, iteration, "form_data", "State"), logPath, , actionHistoryRecordID)
+
+            'enter zip code
+            driver.FindElement(By.Id("FormsEditField12")).SendKeys(mosaicDll.dt(excelPath, iteration, "form_data", "Zip_Code"))
+            mosaicDll.Logger(senderMCPAction, "Actual Result|Entered Zip Code: " & mosaicDll.dt(excelPath, iteration, "form_data", "Zip_Code"), logPath, , actionHistoryRecordID)
+
+            'enter country
+            driver.FindElement(By.Id("FormsEditField6")).SendKeys(mosaicDll.dt(excelPath, iteration, "form_data", "Country"))
+            mosaicDll.Logger(senderMCPAction, "Actual Result|Entered Country: " & mosaicDll.dt(excelPath, iteration, "form_data", "Country"), logPath, , actionHistoryRecordID)
+
+            'enter phone
+            driver.FindElement(By.Id("FormsEditField7")).SendKeys(mosaicDll.dt(excelPath, iteration, "form_data", "Phone"))
+            mosaicDll.Logger(senderMCPAction, "Actual Result|Entered Phone: " & mosaicDll.dt(excelPath, iteration, "form_data", "Phone"), logPath, , actionHistoryRecordID)
+
+            'enter email
+            driver.FindElement(By.Id("FormsEditField3")).SendKeys(mosaicDll.dt(excelPath, iteration, "form_data", "Email"))
+            mosaicDll.Logger(senderMCPAction, "Actual Result|Entered Email: " & mosaicDll.dt(excelPath, iteration, "form_data", "Email"), logPath, , actionHistoryRecordID)
+            Return returnValues
+        Catch ex As Exception
+            returnValues(0) = executionStatusFailed
+            returnValues(1) = ex.Message
+            Return returnValues
+        End Try
+    End Function
+
+    Public Function ta_submit(ByVal mcpParameters() As Object) As Object()
+        Dim returnValues() As Object = New Object() {executionStatusPassed, ""}
+        Dim excelPath As String = CType(mcpParameters(0), String)
+        Dim iteration As Integer = CType(mcpParameters(1), Integer)
+        Dim executableHistoryRecordID As Integer = CType(mcpParameters(2), Integer)
+        Dim actionHistoryRecordID As Integer = CType(mcpParameters(3), Integer)
+        Try
+            Dim logPath As String = My.Computer.FileSystem.CombinePath(My.Computer.FileSystem.GetParentPath(excelPath), executionLog)
+
+            'click the Submit button
+            driver.FindElement(By.Id(mosaicDll.dt(excelPath, iteration, "action_buttons", "Selenium_Path"))).Submit()
+            mosaicDll.Logger(senderMCPAction, "Actual Result|Clicked " & mosaicDll.dt(excelPath, iteration, "action_buttons", "Action_name"), logPath, , actionHistoryRecordID)
+            System.Threading.Thread.Sleep(1500)
+            Return returnValues
+        Catch ex As Exception
+            returnValues(0) = executionStatusFailed
+            returnValues(1) = ex.Message
+            Return returnValues
+        End Try
+    End Function
+
+    Public Function ta_capture_screenshot(ByVal mcpParameters() As Object) As Object()
+        Dim returnValues() As Object = New Object() {executionStatusPassed, ""}
+        Dim excelPath As String = CType(mcpParameters(0), String)
+        Dim iteration As Integer = CType(mcpParameters(1), Integer)
+        Dim executableHistoryRecordID As Integer = CType(mcpParameters(2), Integer)
+        Dim actionHistoryRecordID As Integer = CType(mcpParameters(3), Integer)
+        Dim snagItDirectory As String = ""
+        Dim snagItFileName As String = "" 'file name w/o the extension
+        Dim snagItFileExtension As String = ""  'extension of the image file
+        Try
+            Dim logPath As String = My.Computer.FileSystem.CombinePath(My.Computer.FileSystem.GetParentPath(excelPath), executionLog)
+
+            'get the directory for the SnagIt path
+            snagItDirectory = My.Computer.FileSystem.CombinePath(My.Computer.FileSystem.GetParentPath(excelPath), "Screenshots")
+
+            'get the current date/time and use that as the snagit file name
+            snagItFileName = My.Computer.Clock.LocalTime.Year.ToString & _
+                My.Computer.Clock.LocalTime.Month.ToString.PadLeft(2, "0"c) & _
+                My.Computer.Clock.LocalTime.Day.ToString.PadLeft(2, "0"c) & _
+                "_" & _
+                My.Computer.Clock.LocalTime.Hour.ToString.PadLeft(2, "0"c) & _
+                My.Computer.Clock.LocalTime.Minute.ToString.PadLeft(2, "0"c) & _
+                My.Computer.Clock.LocalTime.Second.ToString.PadLeft(2, "0"c)
+
+            'set snagit to take a desktop screenshot and store it as a file
+            snagIt.Input = SNAGITLib.snagImageInput.siiDesktop
+            snagIt.Output = SNAGITLib.snagImageOutput.sioFile
+
+            'set the screenshot properties and save location
+            snagIt.OutputImageFile.FileNamingMethod = SNAGITLib.snagOuputFileNamingMethod.sofnmFixed
+            snagIt.OutputImageFile.Directory = snagItDirectory
+            snagIt.OutputImageFile.Filename = snagItFileName
+            snagIt.OutputImageFile.FileType = SNAGITLib.snagImageFileType.siftPNG
+            Select Case snagIt.OutputImageFile.FileType
+                Case snagImageFileType.siftPNG
+                    snagItFileExtension = ".png"
+                Case snagImageFileType.siftJPEG
+                    snagItFileExtension = ".jpeg"
+                Case snagImageFileType.siftGIF
+                    snagItFileExtension = ".gif"
+                Case snagImageFileType.siftBMP
+                    snagItFileExtension = ".bmp"
+                Case Else
+                    snagItFileExtension = ""
+            End Select
+
+            'don't show snagit preview window and cursor
+            snagIt.EnablePreviewWindow = False
+            snagIt.IncludeCursor = False
+
+            'take a snapshot, check for snagit license
+            Try
+                snagIt.Capture()
+                mosaicDll.RSTAR_AddScreenshot(CLng(executableHistoryRecordID), 5, CLng(actionHistoryRecordID), My.Computer.FileSystem.CombinePath(snagItDirectory, snagItFileName & snagItFileExtension), "") 'Use 5 to attach a screenshot to an Action in the history table.
+                mosaicDll.Logger(senderMCPAction, "Screenshot|" & My.Computer.FileSystem.CombinePath(snagItDirectory, snagItFileName & snagItFileExtension), logPath, , actionHistoryRecordID)
+                mosaicDll.Logger(senderMCPAction, "Actual Result|Screenshot captured.", logPath, , actionHistoryRecordID)
+            Catch ex As Exception
+                returnValues(0) = executionStatusFailed
+                If snagIt.LastError = SNAGITLib.snagError.serrSnagItExpired Then
+                    returnValues(1) = "Unable to capture a screenshot: SnagIt evaluation has expired."
+                Else
+                    returnValues(1) = "Unable to capture a screenshot: " & ex.Message
+                End If
+                Return returnValues
+            End Try
+            Return returnValues
+        Catch ex As Exception
+            returnValues(0) = executionStatusFailed
+            returnValues(1) = ex.Message
+            Return returnValues
+        End Try
+    End Function
+
+    Public Function ta_verification_action(ByVal mcpParameters() As Object) As Object()
+        Dim returnValues() As Object = New Object() {executionStatusPassed, ""}
+        Dim excelPath As String = CType(mcpParameters(0), String)
+        Dim iteration As Integer = CType(mcpParameters(1), Integer)
+        Dim executableHistoryRecordID As Integer = CType(mcpParameters(2), Integer)
+        Dim actionHistoryRecordID As Integer = CType(mcpParameters(3), Integer)
+        Try
+            Dim logPath As String = My.Computer.FileSystem.CombinePath(My.Computer.FileSystem.GetParentPath(excelPath), executionLog)
+            Dim expectedText As String = mosaicDll.dt(excelPath, iteration, "form_data", "Verification_text")
+            Dim actualText As String = driver.FindElement(By.LinkText(expectedText)).Text
+
+            'verify text on the screen
+            If actualText = expectedText Then
+                returnValues(1) = "Text matched expected value '" & expectedText & "'."
+                mosaicDll.Logger(senderMCPAction, "Actual Result|Text matched expected value '" & expectedText & "'", logPath, , actionHistoryRecordID)
+            Else
+                returnValues(0) = executionStatusFailed
+                returnValues(1) = "Actual value is '" & actualText & "', but expected value is '" & expectedText & "'."
+                mosaicDll.Logger(senderMCPAction, "Actual Result|Actual value is '" & actualText & "', but expected value is '" & expectedText & "'.", logPath, , actionHistoryRecordID)
+            End If
+            Return returnValues
+        Catch ex As Exception
+            returnValues(0) = executionStatusFailed
+            returnValues(1) = ex.Message
+            Return returnValues
+        End Try
+    End Function
+
+    Public Function ta_drop_down_list(ByVal mcpParameters() As Object) As Object()
+        Dim returnValues() As Object = New Object() {executionStatusPassed, ""}
+        Dim excelPath As String = CType(mcpParameters(0), String)
+        Dim iteration As Integer = CType(mcpParameters(1), Integer)
+        Dim executableHistoryRecordID As Integer = CType(mcpParameters(2), Integer)
+        Dim actionHistoryRecordID As Integer = CType(mcpParameters(3), Integer)
+        Try
+            Dim logPath As String = My.Computer.FileSystem.CombinePath(My.Computer.FileSystem.GetParentPath(excelPath), executionLog)
+
+            'create an object for the dropdown, then select the text
+            Dim item As SelectElement = New SelectElement(driver.FindElement(By.Id(mosaicDll.dt(excelPath, iteration, "selection_down", "list_Name"))))
+            item.SelectByText(mosaicDll.dt(excelPath, iteration, "selection_down", "Selection_value"))
+
+            mosaicDll.Logger(senderMCPAction, "Actual Result|Selected from dropdown: " & mosaicDll.dt(excelPath, iteration, "selection_down", "Selection_value"), logPath, , actionHistoryRecordID)
+            System.Threading.Thread.Sleep(2000) 'useful if filling out multiple lists that are dependent on one another
+            Return returnValues
+        Catch ex As Exception
+            returnValues(0) = executionStatusFailed
+            returnValues(1) = ex.Message
+            Return returnValues
+        End Try
+    End Function
+
+    Public Function ta_select_radio_button(ByVal mcpParameters() As Object) As Object()
+        Dim returnValues() As Object = New Object() {executionStatusPassed, ""}
+        Dim excelPath As String = CType(mcpParameters(0), String)
+        Dim iteration As Integer = CType(mcpParameters(1), Integer)
+        Dim executableHistoryRecordID As Integer = CType(mcpParameters(2), Integer)
+        Dim actionHistoryRecordID As Integer = CType(mcpParameters(3), Integer)
+        Try
+            driver.FindElement(By.XPath("//input[@id='nof']")).Click()
+            Return returnValues
+        Catch ex As Exception
+            returnValues(0) = executionStatusFailed
+            returnValues(1) = ex.Message
+            Return returnValues
+        End Try
+    End Function
+
+    Public Function ta_set_checkbox(ByVal mcpParameters() As Object) As Object()
+        Dim returnValues() As Object = New Object() {executionStatusPassed, ""}
+        Dim excelPath As String = CType(mcpParameters(0), String)
+        Dim iteration As Integer = CType(mcpParameters(1), Integer)
+        Dim executableHistoryRecordID As Integer = CType(mcpParameters(2), Integer)
+        Dim actionHistoryRecordID As Integer = CType(mcpParameters(3), Integer)
+        Try
+            driver.FindElement(By.Id("paf")).Click()
+            Return returnValues
+        Catch ex As Exception
+            returnValues(0) = executionStatusFailed
+            returnValues(1) = ex.Message
+            Return returnValues
+        End Try
+    End Function
+
+    Public Function ta_enter_zip_code(ByVal mcpParameters() As Object) As Object()
+        Dim returnValues() As Object = New Object() {executionStatusPassed, ""}
+        Dim excelPath As String = CType(mcpParameters(0), String)
+        Dim iteration As Integer = CType(mcpParameters(1), Integer)
+        Dim executableHistoryRecordID As Integer = CType(mcpParameters(2), Integer)
+        Dim actionHistoryRecordID As Integer = CType(mcpParameters(3), Integer)
+        Try
+            Dim logPath As String = My.Computer.FileSystem.CombinePath(My.Computer.FileSystem.GetParentPath(excelPath), executionLog)
+
+            'enter zip code
+            Dim zipCode As String = mosaicDll.dt(excelPath, iteration, "form_data", "Zip_Code")
+            driver.FindElement(By.Id("zcnew")).Clear()
+            driver.FindElement(By.Id("zcnew")).SendKeys(zipCode)
+            'driver.FindElement(By.XPath("//input[@id='zcnew']")).SendKeys(zipCode)
+            mosaicDll.Logger(senderMCPAction, "Actual Result|Entered Zip Code: " & zipCode, logPath, , actionHistoryRecordID)
+            Return returnValues
+        Catch ex As Exception
+            returnValues(0) = executionStatusFailed
+            returnValues(1) = ex.Message
+            Return returnValues
+        End Try
+    End Function
+
+    Public Function ta_click_button(ByVal mcpParameters() As Object) As Object()
+        Dim returnValues() As Object = New Object() {executionStatusPassed, ""}
+        Dim excelPath As String = CType(mcpParameters(0), String)
+        Dim iteration As Integer = CType(mcpParameters(1), Integer)
+        Dim executableHistoryRecordID As Integer = CType(mcpParameters(2), Integer)
+        Dim actionHistoryRecordID As Integer = CType(mcpParameters(3), Integer)
+        Try
+            Dim logPath As String = My.Computer.FileSystem.CombinePath(My.Computer.FileSystem.GetParentPath(excelPath), executionLog)
+
+            'click the Submit button
+            driver.FindElement(By.XPath(mosaicDll.dt(excelPath, iteration, "action_buttons", "Selenium_Path"))).Click()
+            mosaicDll.Logger(senderMCPAction, "Actual Result|Clicked " & mosaicDll.dt(excelPath, iteration, "action_buttons", "Action_name"), logPath, , actionHistoryRecordID)
+            System.Threading.Thread.Sleep(10000)
+            Return returnValues
+        Catch ex As Exception
+            returnValues(0) = executionStatusFailed
+            returnValues(1) = ex.Message
+            Return returnValues
+        End Try
+    End Function
+#End Region
+
+    Protected Overrides Sub Finalize()
+        MyBase.Finalize()
+    End Sub
+End Class
