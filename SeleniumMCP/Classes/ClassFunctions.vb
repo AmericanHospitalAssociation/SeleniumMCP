@@ -2269,6 +2269,78 @@ JumpMonths:
     End Function
 
     '3
+
+    Public Function ta_STOR_click_join_link_logged_in_no_questions(ByVal mcpParameters() As Object) As Object()
+        Dim returnValues() As Object = New Object() {executionStatusPassed, ""}
+        Dim excelPath As String = CType(mcpParameters(0), String)
+        Dim iteration As Integer = CType(mcpParameters(1), Integer)
+        Dim actionHistoryRecordID As Integer = CType(mcpParameters(2), Integer)
+        Try
+
+            'Path to Login
+            Dim strLoginXPath As String = "//div[@id='LoginDetail']/div/a[1]"
+
+
+            Dim oLink As New AutomationObject
+            oLink.aObject = WaitForElement(driver, WaitForTime, By.XPath(strLoginXPath))
+            If Not oLink.aObject Is Nothing Then
+                oLink.aElement = DirectCast(oLink.aObject, IWebElement)
+                oLink.aElement.Click()
+                mosaicDll.Logger(senderMCPAction, "Actual Result|Clicked login link ", myLogPath, , actionHistoryRecordID)
+            Else
+                returnValues(0) = executionStatusFailed
+                returnValues(1) = CStr(returnValues(1)) & "Could not click button"
+                mosaicDll.Logger(senderMCPAction, "Actual Result|Could Not click login link: ", myLogPath, , actionHistoryRecordID)
+                CaptureScreenshot(actionHistoryRecordID)
+            End If
+
+
+            Return returnValues
+        Catch ex As Exception
+            returnValues(0) = executionStatusFailed
+            returnValues(1) = CStr(returnValues(1)) & " Exception: " & ex.Message
+            mosaicDll.Logger(senderMCPAction, exceptionErrorMsg, myLogPath, , actionHistoryRecordID)
+            mosaicDll.Logger(senderMCPAction, "Error|Exception: '" & ex.Message & "'", myLogPath, , actionHistoryRecordID)
+            Return returnValues
+        End Try
+    End Function
+
+    Public Function ta_STOR_click_add_to_cart_button_on_membership_screen(ByVal mcpParameters() As Object) As Object()
+        Dim returnValues() As Object = New Object() {executionStatusPassed, ""}
+        Dim excelPath As String = CType(mcpParameters(0), String)
+        Dim iteration As Integer = CType(mcpParameters(1), Integer)
+        Dim actionHistoryRecordID As Integer = CType(mcpParameters(2), Integer)
+        Try
+
+            'Path to Add to Cart button
+            Dim strCartXPath As String = "//div[@id='LoginDetail']/div/a[1]"
+
+
+            Dim oLink As New AutomationObject
+            oLink.aObject = WaitForElement(driver, WaitForTime, By.XPath(strCartXPath))
+            If Not oLink.aObject Is Nothing Then
+                oLink.aElement = DirectCast(oLink.aObject, IWebElement)
+                oLink.aElement.Click()
+                mosaicDll.Logger(senderMCPAction, "Actual Result|Clicked login link ", myLogPath, , actionHistoryRecordID)
+            Else
+                returnValues(0) = executionStatusFailed
+                returnValues(1) = CStr(returnValues(1)) & "Could not click button"
+                mosaicDll.Logger(senderMCPAction, "Actual Result|Could Not click login link: ", myLogPath, , actionHistoryRecordID)
+                CaptureScreenshot(actionHistoryRecordID)
+            End If
+
+
+            Return returnValues
+        Catch ex As Exception
+            returnValues(0) = executionStatusFailed
+            returnValues(1) = CStr(returnValues(1)) & " Exception: " & ex.Message
+            mosaicDll.Logger(senderMCPAction, exceptionErrorMsg, myLogPath, , actionHistoryRecordID)
+            mosaicDll.Logger(senderMCPAction, "Error|Exception: '" & ex.Message & "'", myLogPath, , actionHistoryRecordID)
+            Return returnValues
+        End Try
+    End Function
+
+
 #End Region
 
     Protected Overrides Sub Finalize()
