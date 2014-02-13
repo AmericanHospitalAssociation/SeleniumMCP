@@ -2053,9 +2053,43 @@ JumpMonths:
                 'CaptureScreenshot(actionHistoryRecordID)
             End If
 
-                Return returnValues
+            Return returnValues
         Catch ex As Exception
             returnValues(0) = executionStatusFailedAbort
+            returnValues(1) = CStr(returnValues(1)) & " Exception: " & ex.Message
+            mosaicDll.Logger(senderMCPAction, exceptionErrorMsg, myLogPath, , actionHistoryRecordID)
+            mosaicDll.Logger(senderMCPAction, "Error|Exception: '" & ex.Message & "'", myLogPath, , actionHistoryRecordID)
+            Return returnValues
+        End Try
+    End Function
+    Public Function ta_REG_click_register_link_on_new_acct_reg_screen(ByVal mcpParameters() As Object) As Object()
+        Dim returnValues() As Object = New Object() {executionStatusPassed, ""}
+        Dim excelPath As String = CType(mcpParameters(0), String)
+        Dim iteration As Integer = CType(mcpParameters(1), Integer)
+        Dim actionHistoryRecordID As Integer = CType(mcpParameters(2), Integer)
+        Try
+
+            'Path to login button
+            Dim strRegisterParagraphLink As String = "//span[@id='resultheader']/p/a/b"
+
+
+            Dim oLink As New AutomationObject
+            oLink.aObject = WaitForElement(driver, WaitForTime, By.XPath(strRegisterParagraphLink))
+            If Not oLink.aObject Is Nothing Then
+                oLink.aElement = DirectCast(oLink.aObject, IWebElement)
+                oLink.aElement.Click()
+                mosaicDll.Logger(senderMCPAction, "Actual Result|Clicked the register link ", myLogPath, , actionHistoryRecordID)
+            Else
+                returnValues(0) = executionStatusFailed
+                returnValues(1) = CStr(returnValues(1)) & "Could not click button"
+                mosaicDll.Logger(senderMCPAction, "Actual Result|Could not click the register link: ", myLogPath, , actionHistoryRecordID)
+                CaptureScreenshot(actionHistoryRecordID)
+            End If
+
+
+            Return returnValues
+        Catch ex As Exception
+            returnValues(0) = executionStatusFailed
             returnValues(1) = CStr(returnValues(1)) & " Exception: " & ex.Message
             mosaicDll.Logger(senderMCPAction, exceptionErrorMsg, myLogPath, , actionHistoryRecordID)
             mosaicDll.Logger(senderMCPAction, "Error|Exception: '" & ex.Message & "'", myLogPath, , actionHistoryRecordID)
@@ -2131,11 +2165,11 @@ JumpMonths:
                 oField.aElement = DirectCast(oField.aObject, IWebElement)
                 oField.aElement.SendKeys(Keys.Control + "a")
                 oField.aElement.SendKeys(sMiddleName)
-                mosaicDll.Logger(senderMCPAction, "Actual Result|Entered first name: ", myLogPath, , actionHistoryRecordID)
+                mosaicDll.Logger(senderMCPAction, "Actual Result|Entered middle name: ", myLogPath, , actionHistoryRecordID)
             Else
                 returnValues(0) = executionStatusFailed
-                returnValues(1) = CStr(returnValues(1)) & "could not enter the first name."
-                mosaicDll.Logger(senderMCPAction, "Actual Result| Could not enter the first name.", myLogPath, , actionHistoryRecordID)
+                returnValues(1) = CStr(returnValues(1)) & "could not enter the middle name."
+                mosaicDll.Logger(senderMCPAction, "Actual Result| Could not enter the middle name.", myLogPath, , actionHistoryRecordID)
                 CaptureScreenshot(actionHistoryRecordID)
             End If
 
@@ -2146,11 +2180,11 @@ JumpMonths:
                 oField.aElement = DirectCast(oField.aObject, IWebElement)
                 oField.aElement.SendKeys(Keys.Control + "a")
                 oField.aElement.SendKeys(sLastName)
-                mosaicDll.Logger(senderMCPAction, "Actual Result|Entered first name: ", myLogPath, , actionHistoryRecordID)
+                mosaicDll.Logger(senderMCPAction, "Actual Result|Entered last name: ", myLogPath, , actionHistoryRecordID)
             Else
                 returnValues(0) = executionStatusFailed
-                returnValues(1) = CStr(returnValues(1)) & "could not enter the first name."
-                mosaicDll.Logger(senderMCPAction, "Actual Result| Could not enter the first name.", myLogPath, , actionHistoryRecordID)
+                returnValues(1) = CStr(returnValues(1)) & "Could not enter the last name."
+                mosaicDll.Logger(senderMCPAction, "Actual Result| Could not enter the last name.", myLogPath, , actionHistoryRecordID)
                 CaptureScreenshot(actionHistoryRecordID)
             End If
 
@@ -2165,7 +2199,7 @@ JumpMonths:
                 returnValues(0) = executionStatusFailed
                 returnValues(1) = CStr(returnValues(1)) & "Could not set the combo box value"
                 mosaicDll.Logger(senderMCPAction, "Actual Result|Could not set the combo box value to: " & sSuffix, myLogPath, , actionHistoryRecordID)
-                CaptureScreenshot(actionHistoryRecordID)
+                'CaptureScreenshot(actionHistoryRecordID)
             End If
 
 
@@ -2181,7 +2215,7 @@ JumpMonths:
                 returnValues(0) = executionStatusFailed
                 returnValues(1) = CStr(returnValues(1)) & "Could not enter the address line 1."
                 mosaicDll.Logger(senderMCPAction, "Actual Result| Could not enter the address line 1.", myLogPath, , actionHistoryRecordID)
-                CaptureScreenshot(actionHistoryRecordID)
+                'CaptureScreenshot(actionHistoryRecordID)
             End If
 
             Dim sAddress2ID As String = "adr_line2"
@@ -2190,11 +2224,11 @@ JumpMonths:
                 oField.aElement = DirectCast(oField.aObject, IWebElement)
                 oField.aElement.SendKeys(Keys.Control + "a")
                 oField.aElement.SendKeys(saddress_line_2)
-                mosaicDll.Logger(senderMCPAction, "Actual Result|Entered City", myLogPath, , actionHistoryRecordID)
+                mosaicDll.Logger(senderMCPAction, "Actual Result|Entered address line 2", myLogPath, , actionHistoryRecordID)
             Else
                 returnValues(0) = executionStatusFailed
-                returnValues(1) = CStr(returnValues(1)) & "Could not enter the city."
-                mosaicDll.Logger(senderMCPAction, "Actual Result| Could not enter city.", myLogPath, , actionHistoryRecordID)
+                returnValues(1) = CStr(returnValues(1)) & "Could not enter the address line 2"
+                mosaicDll.Logger(senderMCPAction, "Actual Result| Could not enter the address line 2", myLogPath, , actionHistoryRecordID)
                 CaptureScreenshot(actionHistoryRecordID)
             End If
 
@@ -2205,11 +2239,11 @@ JumpMonths:
                 oField.aElement = DirectCast(oField.aObject, IWebElement)
                 oField.aElement.SendKeys(Keys.Control + "a")
                 oField.aElement.SendKeys(sCity)
-                mosaicDll.Logger(senderMCPAction, "Actual Result|Entered first name: ", myLogPath, , actionHistoryRecordID)
+                mosaicDll.Logger(senderMCPAction, "Actual Result|Entered city. ", myLogPath, , actionHistoryRecordID)
             Else
                 returnValues(0) = executionStatusFailed
-                returnValues(1) = CStr(returnValues(1)) & "could not enter the first name."
-                mosaicDll.Logger(senderMCPAction, "Actual Result| Could not enter the first name.", myLogPath, , actionHistoryRecordID)
+                returnValues(1) = CStr(returnValues(1)) & "could not enter the city."
+                mosaicDll.Logger(senderMCPAction, "Actual Result| Could not enter the city", myLogPath, , actionHistoryRecordID)
                 CaptureScreenshot(actionHistoryRecordID)
             End If
 
@@ -2220,26 +2254,26 @@ JumpMonths:
                 oField.aElement = DirectCast(oField.aObject, IWebElement)
                 oField.aElement.SendKeys(Keys.Control + "a")
                 oField.aElement.SendKeys(sState)
-                mosaicDll.Logger(senderMCPAction, "Actual Result|Entered first name: ", myLogPath, , actionHistoryRecordID)
+                mosaicDll.Logger(senderMCPAction, "Actual Result|Entered state. ", myLogPath, , actionHistoryRecordID)
             Else
                 returnValues(0) = executionStatusFailed
-                returnValues(1) = CStr(returnValues(1)) & "could not enter the first name."
-                mosaicDll.Logger(senderMCPAction, "Actual Result| Could not enter the first name.", myLogPath, , actionHistoryRecordID)
+                returnValues(1) = CStr(returnValues(1)) & "Could not enter the state."
+                mosaicDll.Logger(senderMCPAction, "Actual Result| Could not enter the state.", myLogPath, , actionHistoryRecordID)
                 CaptureScreenshot(actionHistoryRecordID)
             End If
 
             'Enter city state zip
-            Dim sZipID As String = "adr_postal_code"
+            Dim sZipID As String = "adr_post_code"
             oField.aObject = WaitForElement(driver, WaitForTime, By.Id(sZipID))
             If Not oField.aObject Is Nothing Then
                 oField.aElement = DirectCast(oField.aObject, IWebElement)
                 oField.aElement.SendKeys(Keys.Control + "a")
                 oField.aElement.SendKeys(sZip)
-                mosaicDll.Logger(senderMCPAction, "Actual Result|Entered first name: ", myLogPath, , actionHistoryRecordID)
+                mosaicDll.Logger(senderMCPAction, "Actual Result|Entered the postal code: ", myLogPath, , actionHistoryRecordID)
             Else
                 returnValues(0) = executionStatusFailed
-                returnValues(1) = CStr(returnValues(1)) & "could not enter the first name."
-                mosaicDll.Logger(senderMCPAction, "Actual Result| Could not enter the first name.", myLogPath, , actionHistoryRecordID)
+                returnValues(1) = CStr(returnValues(1)) & "Could not enter the postal code."
+                mosaicDll.Logger(senderMCPAction, "Actual Result| Could not enter the postal code.", myLogPath, , actionHistoryRecordID)
                 CaptureScreenshot(actionHistoryRecordID)
             End If
 
@@ -2254,7 +2288,66 @@ JumpMonths:
                 returnValues(0) = executionStatusFailed
                 returnValues(1) = CStr(returnValues(1)) & "Could not enter the email address."
                 mosaicDll.Logger(senderMCPAction, "Actual Result| Could not enter the email address.", myLogPath, , actionHistoryRecordID)
-                CaptureScreenshot(actionHistoryRecordID)
+                'CaptureScreenshot(actionHistoryRecordID)
+            End If
+
+            Dim sPassword1ID As String = "AHA_Password1"
+            oField.aObject = WaitForElement(driver, WaitForTime, By.Id(sPassword1ID))
+            If Not oField.aObject Is Nothing Then
+                oField.aElement = DirectCast(oField.aObject, IWebElement)
+                oField.aElement.SendKeys(Keys.Control + "a")
+                oField.aElement.SendKeys(sCurrentPassword)
+                mosaicDll.Logger(senderMCPAction, "Actual Result|Entered the initial password. ", myLogPath, , actionHistoryRecordID)
+            Else
+                returnValues(0) = executionStatusFailed
+                returnValues(1) = CStr(returnValues(1)) & "Could not enter the initial password."
+                mosaicDll.Logger(senderMCPAction, "Actual Result| Could not enter the initial password.", myLogPath, , actionHistoryRecordID)
+                'CaptureScreenshot(actionHistoryRecordID)
+            End If
+
+            Dim sPassword2ID As String = "AHA_Password2"
+            oField.aObject = WaitForElement(driver, WaitForTime, By.Id(sPassword2ID))
+            If Not oField.aObject Is Nothing Then
+                oField.aElement = DirectCast(oField.aObject, IWebElement)
+                oField.aElement.SendKeys(Keys.Control + "a")
+                oField.aElement.SendKeys(sCurrentPassword)
+                mosaicDll.Logger(senderMCPAction, "Actual Result|Entered the password verification ", myLogPath, , actionHistoryRecordID)
+            Else
+                returnValues(0) = executionStatusFailed
+                returnValues(1) = CStr(returnValues(1)) & "Could not enter the password verification."
+                mosaicDll.Logger(senderMCPAction, "Actual Result| Could not enter the password verification.", myLogPath, , actionHistoryRecordID)
+                'CaptureScreenshot(actionHistoryRecordID)
+            End If
+
+
+
+            Return returnValues
+        Catch ex As Exception
+            returnValues(0) = executionStatusFailed
+            returnValues(1) = CStr(returnValues(1)) & " Exception: " & ex.Message
+            mosaicDll.Logger(senderMCPAction, exceptionErrorMsg, myLogPath, , actionHistoryRecordID)
+            mosaicDll.Logger(senderMCPAction, "Error|Exception: '" & ex.Message & "'", myLogPath, , actionHistoryRecordID)
+            Return returnValues
+        End Try
+    End Function
+    Public Function ta_REG_submit_valid_new_acct_reg_info_wo_linking_to_org(ByVal mcpParameters() As Object) As Object()
+        Dim returnValues() As Object = New Object() {executionStatusPassed, ""}
+        Dim excelPath As String = CType(mcpParameters(0), String)
+        Dim iteration As Integer = CType(mcpParameters(1), Integer)
+        Dim actionHistoryRecordID As Integer = CType(mcpParameters(2), Integer)
+        Try
+
+            Dim oLink As New AutomationObject
+            oLink.aObject = WaitForElement(driver, WaitForTime, By.Id("SubmitBtn"))
+            If Not oLink.aObject Is Nothing Then
+                oLink.aElement = DirectCast(oLink.aObject, IWebElement)
+                oLink.aElement.Click()
+                mosaicDll.Logger(senderMCPAction, "Actual Result|Clicked the request new account button. ", myLogPath, , actionHistoryRecordID)
+            Else
+                returnValues(0) = executionStatusFailed
+                returnValues(1) = CStr(returnValues(1)) & "Could not click the request new account button."
+                mosaicDll.Logger(senderMCPAction, "Actual Result|Could not click the request new account button. ", myLogPath, , actionHistoryRecordID)
+                'CaptureScreenshot(actionHistoryRecordID)
             End If
 
 
@@ -2267,7 +2360,7 @@ JumpMonths:
             Return returnValues
         End Try
     End Function
-
+    '3
     '3
 
     Public Function ta_STOR_click_join_link_logged_in_no_questions(ByVal mcpParameters() As Object) As Object()
