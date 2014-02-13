@@ -2361,7 +2361,7 @@ JumpMonths:
         End Try
     End Function
     '3
-    '3
+
 
     Public Function ta_STOR_click_join_link_logged_in_no_questions(ByVal mcpParameters() As Object) As Object()
         Dim returnValues() As Object = New Object() {executionStatusPassed, ""}

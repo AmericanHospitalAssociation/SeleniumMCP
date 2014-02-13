@@ -9,7 +9,7 @@ Imports System.Reflection
 
 Public Class FormSeleniumMCP
     'global constants
-    Public Const versionNumber As String = "0.0.6" 'remember to keep SetupSeleniumMCP.Version in sync with this value
+    Public Const versionNumber As String = "1.0.0" 'remember to keep SetupSeleniumMCP.Version in sync with this value
     Public Const applicationName As String = "Selenium MCP"
     Public Const requiredParameterCount As Integer = 4
 
