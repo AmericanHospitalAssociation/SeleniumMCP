@@ -2347,9 +2347,21 @@ JumpMonths:
                 returnValues(0) = executionStatusFailed
                 returnValues(1) = CStr(returnValues(1)) & "Could not click the request new account button."
                 mosaicDll.Logger(senderMCPAction, "Actual Result|Could not click the request new account button. ", myLogPath, , actionHistoryRecordID)
-                'CaptureScreenshot(actionHistoryRecordID)
+                CaptureScreenshot(actionHistoryRecordID)
             End If
 
+
+            'oLink.aObject = WaitForElement(driver, WaitForTime, By.Id("SubmitBtn"))
+            'If Not oLink.aObject Is Nothing Then
+            '    oLink.aElement = DirectCast(oLink.aObject, IWebElement)
+            '    oLink.aElement.Click()
+            '    mosaicDll.Logger(senderMCPAction, "Actual Result|Clicked the request new account button. ", myLogPath, , actionHistoryRecordID)
+            'Else
+            '    returnValues(0) = executionStatusFailed
+            '    returnValues(1) = CStr(returnValues(1)) & "Could not click the request new account button."
+            '    mosaicDll.Logger(senderMCPAction, "Actual Result|Could not click the request new account button. ", myLogPath, , actionHistoryRecordID)
+            '    CaptureScreenshot(actionHistoryRecordID)
+            'End If
 
             Return returnValues
         Catch ex As Exception
@@ -2360,9 +2372,6 @@ JumpMonths:
             Return returnValues
         End Try
     End Function
-    '3
-
-
     Public Function ta_STOR_click_join_link_logged_in_no_questions(ByVal mcpParameters() As Object) As Object()
         Dim returnValues() As Object = New Object() {executionStatusPassed, ""}
         Dim excelPath As String = CType(mcpParameters(0), String)
@@ -2398,6 +2407,7 @@ JumpMonths:
         End Try
     End Function
 
+    '3
     Public Function ta_STOR_submit_valid_membership_info(ByVal mcpParameters() As Object) As Object()
         Dim returnValues() As Object = New Object() {executionStatusPassed, ""}
         Dim excelPath As String = CType(mcpParameters(0), String)
@@ -2432,7 +2442,6 @@ JumpMonths:
             Return returnValues
         End Try
     End Function
-
     Public Function ta_STOR_click_add_to_cart_button_on_membership_screen(ByVal mcpParameters() As Object) As Object()
         Dim returnValues() As Object = New Object() {executionStatusPassed, ""}
         Dim excelPath As String = CType(mcpParameters(0), String)
@@ -2454,6 +2463,142 @@ JumpMonths:
                 returnValues(0) = executionStatusFailed
                 returnValues(1) = CStr(returnValues(1)) & "Could not click button"
                 mosaicDll.Logger(senderMCPAction, "Actual Result|Could Not click login link: ", myLogPath, , actionHistoryRecordID)
+                CaptureScreenshot(actionHistoryRecordID)
+            End If
+
+
+            Return returnValues
+        Catch ex As Exception
+            returnValues(0) = executionStatusFailed
+            returnValues(1) = CStr(returnValues(1)) & " Exception: " & ex.Message
+            mosaicDll.Logger(senderMCPAction, exceptionErrorMsg, myLogPath, , actionHistoryRecordID)
+            mosaicDll.Logger(senderMCPAction, "Error|Exception: '" & ex.Message & "'", myLogPath, , actionHistoryRecordID)
+            Return returnValues
+        End Try
+    End Function
+
+    '4 Memnebership Renewal
+    Public Function ta_SSO_click_eweb_login_link(ByVal mcpParameters() As Object) As Object()
+        Dim returnValues() As Object = New Object() {executionStatusPassed, ""}
+        Dim excelPath As String = CType(mcpParameters(0), String)
+        Dim iteration As Integer = CType(mcpParameters(1), Integer)
+        Dim actionHistoryRecordID As Integer = CType(mcpParameters(2), Integer)
+        Try
+
+            'Path to renewal button
+            Dim strRenewXPathID As String = "login"
+
+
+            Dim oLink As New AutomationObject
+            oLink.aObject = WaitForElement(driver, WaitForTime, By.Id(strRenewXPathID))
+            If Not oLink.aObject Is Nothing Then
+                oLink.aElement = DirectCast(oLink.aObject, IWebElement)
+                oLink.aElement.Click()
+                mosaicDll.Logger(senderMCPAction, "Actual Result|Clicked the login link ", myLogPath, , actionHistoryRecordID)
+            Else
+                returnValues(0) = executionStatusFailed
+                returnValues(1) = CStr(returnValues(1)) & "Could not click the login button"
+                mosaicDll.Logger(senderMCPAction, "Actual Result|Could not click the login link: ", myLogPath, , actionHistoryRecordID)
+                CaptureScreenshot(actionHistoryRecordID)
+            End If
+
+
+            Return returnValues
+        Catch ex As Exception
+            returnValues(0) = executionStatusFailed
+            returnValues(1) = CStr(returnValues(1)) & " Exception: " & ex.Message
+            mosaicDll.Logger(senderMCPAction, exceptionErrorMsg, myLogPath, , actionHistoryRecordID)
+            mosaicDll.Logger(senderMCPAction, "Error|Exception: '" & ex.Message & "'", myLogPath, , actionHistoryRecordID)
+            Return returnValues
+        End Try
+    End Function
+    Public Function ta_SSO_enter_eweb_login_info(ByVal mcpParameters() As Object) As Object()
+        Dim returnValues() As Object = New Object() {executionStatusPassed, ""}
+        Dim excelPath As String = CType(mcpParameters(0), String)
+        Dim iteration As Integer = CType(mcpParameters(1), Integer)
+        Dim actionHistoryRecordID As Integer = CType(mcpParameters(2), Integer)
+        Try
+
+            'Path to renewal button
+            Dim sEmailID As String = "Email"
+            Dim sPasswordID As String = "Password"
+            Dim sRememberMeID As String = "remember_me"
+
+            'Get the Data
+            Dim sEmail As String = mosaicDll.dt(excelPath, iteration, "individual_info", "primary_email")
+            Dim sPassword As String = mosaicDll.dt(excelPath, iteration, "individual_info", "password")
+            Dim sRememberMe As String = mosaicDll.dt(excelPath, iteration, "individual_info", "remember_me_check_box")
+
+
+
+            Dim oLink As New AutomationObject
+            oLink.aObject = WaitForElement(driver, WaitForTime, By.Id(sEmailID)
+            If Not oLink.aObject Is Nothing Then
+                oLink.aElement = DirectCast(oLink.aObject, IWebElement)
+                oLink.aElement.SendKeys(Keys.Control + "a")
+                oLink.aElement.SendKeys(sEmail)
+                mosaicDll.Logger(senderMCPAction, "Actual Result|Clicked the login link ", myLogPath, , actionHistoryRecordID)
+            Else
+                returnValues(0) = executionStatusFailed
+                returnValues(1) = CStr(returnValues(1)) & "Could not click the login button"
+                mosaicDll.Logger(senderMCPAction, "Actual Result|Could not click the login link: ", myLogPath, , actionHistoryRecordID)
+                CaptureScreenshot(actionHistoryRecordID)
+            End If
+
+            oLink.aObject = WaitForElement(driver, WaitForTime, By.Id(sEmailID)
+            If Not oLink.aObject Is Nothing Then
+                oLink.aElement.SendKeys(Keys.Control + "a")
+                oLink.aElement.SendKeys(sPassword)
+                mosaicDll.Logger(senderMCPAction, "Actual Result|Clicked the login link ", myLogPath, , actionHistoryRecordID)
+            Else
+                returnValues(0) = executionStatusFailed
+                returnValues(1) = CStr(returnValues(1)) & "Could not click the login button"
+                mosaicDll.Logger(senderMCPAction, "Actual Result|Could not click the login link: ", myLogPath, , actionHistoryRecordID)
+                CaptureScreenshot(actionHistoryRecordID)
+            End If
+
+            oLink.aObject = WaitForElement(driver, WaitForTime, By.Id(sEmailID)
+            If Not oLink.aObject Is Nothing Then
+                oLink.aElement = DirectCast(oLink.aObject, IWebElement)
+                'coompare check box values
+                mosaicDll.Logger(senderMCPAction, "Actual Result|Clicked the login link ", myLogPath, , actionHistoryRecordID)
+            Else
+                returnValues(0) = executionStatusFailed
+                returnValues(1) = CStr(returnValues(1)) & "Could not click the login button"
+                mosaicDll.Logger(senderMCPAction, "Actual Result|Could not click the login link: ", myLogPath, , actionHistoryRecordID)
+                CaptureScreenshot(actionHistoryRecordID)
+            End If
+
+
+            Return returnValues
+        Catch ex As Exception
+            returnValues(0) = executionStatusFailed
+            returnValues(1) = CStr(returnValues(1)) & " Exception: " & ex.Message
+            mosaicDll.Logger(senderMCPAction, exceptionErrorMsg, myLogPath, , actionHistoryRecordID)
+            mosaicDll.Logger(senderMCPAction, "Error|Exception: '" & ex.Message & "'", myLogPath, , actionHistoryRecordID)
+            Return returnValues
+        End Try
+    End Function
+    Public Function ta_SSO_submit_valid_eweb_login(ByVal mcpParameters() As Object) As Object()
+        Dim returnValues() As Object = New Object() {executionStatusPassed, ""}
+        Dim excelPath As String = CType(mcpParameters(0), String)
+        Dim iteration As Integer = CType(mcpParameters(1), Integer)
+        Dim actionHistoryRecordID As Integer = CType(mcpParameters(2), Integer)
+        Try
+
+            'Path to renewal button
+            Dim sLoginID As String = "login"
+
+            Dim oLink As New AutomationObject
+            oLink.aObject = WaitForElement(driver, WaitForTime, By.Id(sLoginID))
+            If Not oLink.aObject Is Nothing Then
+                oLink.aElement = DirectCast(oLink.aObject, IWebElement)
+                oLink.aElement.Click()
+                mosaicDll.Logger(senderMCPAction, "Actual Result|Clicked the login link ", myLogPath, , actionHistoryRecordID)
+            Else
+                returnValues(0) = executionStatusFailed
+                returnValues(1) = CStr(returnValues(1)) & "Could not click the login button"
+                mosaicDll.Logger(senderMCPAction, "Actual Result|Could not click the login link: ", myLogPath, , actionHistoryRecordID)
                 CaptureScreenshot(actionHistoryRecordID)
             End If
 
