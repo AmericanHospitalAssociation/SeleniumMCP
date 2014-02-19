@@ -2478,7 +2478,7 @@ JumpMonths:
     End Function
 
     '4 Memnebership Renewal
-    Public Function ta_SSO_click_eweb_login_link(ByVal mcpParameters() As Object) As Object()
+    Public Function ta_SSO_click_eweb_login_link2(ByVal mcpParameters() As Object) As Object()
         Dim returnValues() As Object = New Object() {executionStatusPassed, ""}
         Dim excelPath As String = CType(mcpParameters(0), String)
         Dim iteration As Integer = CType(mcpParameters(1), Integer)
@@ -2512,7 +2512,7 @@ JumpMonths:
             Return returnValues
         End Try
     End Function
-    Public Function ta_SSO_enter_eweb_login_info(ByVal mcpParameters() As Object) As Object()
+    Public Function ta_SSO_enter_eweb_login_info2(ByVal mcpParameters() As Object) As Object()
         Dim returnValues() As Object = New Object() {executionStatusPassed, ""}
         Dim excelPath As String = CType(mcpParameters(0), String)
         Dim iteration As Integer = CType(mcpParameters(1), Integer)
@@ -2532,7 +2532,7 @@ JumpMonths:
 
 
             Dim oLink As New AutomationObject
-            oLink.aObject = WaitForElement(driver, WaitForTime, By.Id(sEmailID)
+            oLink.aObject = WaitForElement(driver, WaitForTime, By.Id(sEmailID))
             If Not oLink.aObject Is Nothing Then
                 oLink.aElement = DirectCast(oLink.aObject, IWebElement)
                 oLink.aElement.SendKeys(Keys.Control + "a")
@@ -2542,10 +2542,10 @@ JumpMonths:
                 returnValues(0) = executionStatusFailed
                 returnValues(1) = CStr(returnValues(1)) & "Could not click the login button"
                 mosaicDll.Logger(senderMCPAction, "Actual Result|Could not click the login link: ", myLogPath, , actionHistoryRecordID)
-                CaptureScreenshot(actionHistoryRecordID)
+                'CaptureScreenshot(actionHistoryRecordID)
             End If
 
-            oLink.aObject = WaitForElement(driver, WaitForTime, By.Id(sEmailID)
+            oLink.aObject = WaitForElement(driver, WaitForTime, By.Id(sEmailID))
             If Not oLink.aObject Is Nothing Then
                 oLink.aElement.SendKeys(Keys.Control + "a")
                 oLink.aElement.SendKeys(sPassword)
@@ -2554,10 +2554,10 @@ JumpMonths:
                 returnValues(0) = executionStatusFailed
                 returnValues(1) = CStr(returnValues(1)) & "Could not click the login button"
                 mosaicDll.Logger(senderMCPAction, "Actual Result|Could not click the login link: ", myLogPath, , actionHistoryRecordID)
-                CaptureScreenshot(actionHistoryRecordID)
+                'CaptureScreenshot(actionHistoryRecordID)
             End If
 
-            oLink.aObject = WaitForElement(driver, WaitForTime, By.Id(sEmailID)
+            oLink.aObject = WaitForElement(driver, WaitForTime, By.Id(sEmailID))
             If Not oLink.aObject Is Nothing Then
                 oLink.aElement = DirectCast(oLink.aObject, IWebElement)
                 'coompare check box values
@@ -2566,7 +2566,7 @@ JumpMonths:
                 returnValues(0) = executionStatusFailed
                 returnValues(1) = CStr(returnValues(1)) & "Could not click the login button"
                 mosaicDll.Logger(senderMCPAction, "Actual Result|Could not click the login link: ", myLogPath, , actionHistoryRecordID)
-                CaptureScreenshot(actionHistoryRecordID)
+                'CaptureScreenshot(actionHistoryRecordID)
             End If
 
 
@@ -2579,7 +2579,7 @@ JumpMonths:
             Return returnValues
         End Try
     End Function
-    Public Function ta_SSO_submit_valid_eweb_login(ByVal mcpParameters() As Object) As Object()
+    Public Function ta_SSO_submit_valid_eweb_login2(ByVal mcpParameters() As Object) As Object()
         Dim returnValues() As Object = New Object() {executionStatusPassed, ""}
         Dim excelPath As String = CType(mcpParameters(0), String)
         Dim iteration As Integer = CType(mcpParameters(1), Integer)
@@ -2602,6 +2602,139 @@ JumpMonths:
                 CaptureScreenshot(actionHistoryRecordID)
             End If
 
+
+            Return returnValues
+        Catch ex As Exception
+            returnValues(0) = executionStatusFailed
+            returnValues(1) = CStr(returnValues(1)) & " Exception: " & ex.Message
+            mosaicDll.Logger(senderMCPAction, exceptionErrorMsg, myLogPath, , actionHistoryRecordID)
+            mosaicDll.Logger(senderMCPAction, "Error|Exception: '" & ex.Message & "'", myLogPath, , actionHistoryRecordID)
+            Return returnValues
+        End Try
+    End Function
+    Public Function ta_NAV_click_renew_rejoin_link(ByVal mcpParameters() As Object) As Object()
+        Dim returnValues() As Object = New Object() {executionStatusPassed, ""}
+        Dim excelPath As String = CType(mcpParameters(0), String)
+        Dim iteration As Integer = CType(mcpParameters(1), Integer)
+        Dim actionHistoryRecordID As Integer = CType(mcpParameters(2), Integer)
+        Try
+
+            'Path to renewal button
+            Dim sMemberShipXPath As String = "//div[@id='LoginDetail']/div[3]/a"
+
+
+            Dim oLink As New AutomationObject
+            oLink.aObject = WaitForElement(driver, WaitForTime, By.XPath(sMemberShipXPath))
+            If Not oLink.aObject Is Nothing Then
+                oLink.aElement = DirectCast(oLink.aObject, IWebElement)
+                oLink.aElement.Click()
+                mosaicDll.Logger(senderMCPAction, "Actual Result|Clicked the membership link ", myLogPath, , actionHistoryRecordID)
+            Else
+                returnValues(0) = executionStatusFailed
+                returnValues(1) = CStr(returnValues(1)) & "Could not click the membership button"
+                mosaicDll.Logger(senderMCPAction, "Actual Result|Could not click the membership button.", myLogPath, , actionHistoryRecordID)
+                CaptureScreenshot(actionHistoryRecordID)
+            End If
+
+
+            Return returnValues
+        Catch ex As Exception
+            returnValues(0) = executionStatusFailed
+            returnValues(1) = CStr(returnValues(1)) & " Exception: " & ex.Message
+            mosaicDll.Logger(senderMCPAction, exceptionErrorMsg, myLogPath, , actionHistoryRecordID)
+            mosaicDll.Logger(senderMCPAction, "Error|Exception: '" & ex.Message & "'", myLogPath, , actionHistoryRecordID)
+            Return returnValues
+        End Try
+    End Function
+    Public Function ta_ACT_validate_renew_membership_screen(ByVal mcpParameters() As Object) As Object()
+        Dim returnValues() As Object = New Object() {executionStatusPassed, ""}
+        Dim excelPath As String = CType(mcpParameters(0), String)
+        Dim iteration As Integer = CType(mcpParameters(1), Integer)
+        Dim actionHistoryRecordID As Integer = CType(mcpParameters(2), Integer)
+        Try
+
+            'Path to renewal button
+            Dim sEmailID As String = "Email"
+            Dim sPasswordID As String = "Password"
+            Dim sRememberMeID As String = "remember_me"
+
+            'Get the Data
+            Dim sFullName As String = mosaicDll.dt(excelPath, iteration, "individual_info", "full_name")
+            Dim sAssociation As String = mosaicDll.dt(excelPath, iteration, "membership_info", "association")
+            Dim sMembershipPackage As String = mosaicDll.dt(excelPath, iteration, "membership_info", "membership_package")
+            Dim sPrice As String = mosaicDll.dt(excelPath, iteration, "membership_info", "price")
+
+            Dim sFullNameID As String = "cst_ind_full_name_id"
+            Dim sAsscocXPath As String = "//div[@id='LoginDetail']/div[4]"
+            Dim sPriceXPath As String = "/html/body/form/table/tbody/tr[2]/td[2]/table/tbody/tr[2]/td[2]/table[1]/tbody/tr[2]/td/table/tbody/tr[4]/td/div/span[2]/div/span/table/tbody/tr[2]/td/table/tbody/tr[2]"
+            Dim sMembershipXpath As String = "/html/body/form/table/tbody/tr[2]/td[2]/table/tbody/tr[2]/td[2]/table[1]/tbody/tr[2]/td/table/tbody/tr[4]/td/div/span[2]/div/span/table/tbody/tr[2]/td/table/tbody/tr[2]/td[2]/a"
+
+            'match full name
+            Dim oLink As New AutomationObject
+            oLink.aObject = WaitForElement(driver, WaitForTime, By.Id(sFullNameID))
+            If Not oLink.aObject Is Nothing Then
+                oLink.aElement = DirectCast(oLink.aObject, IWebElement)
+                If oLink.aElement.Text = sFullName Then
+                    mosaicDll.Logger(senderMCPAction, "Actual Result|Full name matches", myLogPath, , actionHistoryRecordID)
+                Else
+                    mosaicDll.Logger(senderMCPAction, "Actual Result|Full name did not match", myLogPath, , actionHistoryRecordID)
+                End If
+            Else
+                returnValues(0) = executionStatusFailed
+                returnValues(1) = CStr(returnValues(1)) & "Could not click locate the full namne."
+                mosaicDll.Logger(senderMCPAction, "Actual Result|Could not click locate the full namne. ", myLogPath, , actionHistoryRecordID)
+                CaptureScreenshot(actionHistoryRecordID)
+            End If
+
+            'match association
+            oLink.aObject = WaitForElement(driver, WaitForTime, By.Id(sAsscocXPath))
+            If Not oLink.aObject Is Nothing Then
+                oLink.aElement = DirectCast(oLink.aObject, IWebElement)
+                Dim textString As String = oLink.aElement.Text
+
+                If textString.Substring(0, textString.IndexOf(" ")) = sAssociation Then
+                    mosaicDll.Logger(senderMCPAction, "Actual Result|Association matches.", myLogPath, , actionHistoryRecordID)
+                Else
+                    mosaicDll.Logger(senderMCPAction, "Actual Result|Associsation did not match.", myLogPath, , actionHistoryRecordID)
+                End If
+            Else
+                returnValues(0) = executionStatusFailed
+                returnValues(1) = CStr(returnValues(1)) & "Could not locate the text for association."
+                mosaicDll.Logger(senderMCPAction, "Actual Result|Could not locate the text for association. ", myLogPath, , actionHistoryRecordID)
+                CaptureScreenshot(actionHistoryRecordID)
+            End If
+
+            'match price
+            oLink.aObject = WaitForElement(driver, WaitForTime, By.XPath(sPriceXPath))
+            If Not oLink.aObject Is Nothing Then
+                oLink.aElement = DirectCast(oLink.aObject, IWebElement)
+                If oLink.aElement.Text = sPrice Then
+                    mosaicDll.Logger(senderMCPAction, "Actual Result|Price matches", myLogPath, , actionHistoryRecordID)
+                Else
+                    mosaicDll.Logger(senderMCPAction, "Actual Result|Price did not match", myLogPath, , actionHistoryRecordID)
+                End If
+            Else
+                returnValues(0) = executionStatusFailed
+                returnValues(1) = CStr(returnValues(1)) & "Could not click locate the price."
+                mosaicDll.Logger(senderMCPAction, "Actual Result|Could not click locate price. ", myLogPath, , actionHistoryRecordID)
+                CaptureScreenshot(actionHistoryRecordID)
+            End If
+
+            'member package
+            oLink.aObject = WaitForElement(driver, WaitForTime, By.XPath(sMembershipXpath))
+            If Not oLink.aObject Is Nothing Then
+                oLink.aElement = DirectCast(oLink.aObject, IWebElement)
+                If oLink.aElement.Text = sMembershipPackage Then
+                    mosaicDll.Logger(senderMCPAction, "Actual Result|Price matches", myLogPath, , actionHistoryRecordID)
+                Else
+                    mosaicDll.Logger(senderMCPAction, "Actual Result|Price did not match", myLogPath, , actionHistoryRecordID)
+                End If
+            Else
+                returnValues(0) = executionStatusFailed
+                returnValues(1) = CStr(returnValues(1)) & "Could not click locate the price."
+                mosaicDll.Logger(senderMCPAction, "Actual Result|Could not click locate price. ", myLogPath, , actionHistoryRecordID)
+                CaptureScreenshot(actionHistoryRecordID)
+            End If
 
             Return returnValues
         Catch ex As Exception
