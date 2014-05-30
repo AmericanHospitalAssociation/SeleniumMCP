@@ -51,18 +51,19 @@
     </Header>
     <Snippet>
       <Code Language="VB">
-        <![CDATA[Dim oButton As New AutomationObject
-            oButton.aObject = WaitForElement(driver, WaitForTime, By.XPath("EnterXPathHere"))
-            If Not oButton.aObject Is Nothing Then
-                oButton.aElement = DirectCast(oButton.aObject, IWebElement)
-                oButton.aElement.SendKeys(Keys.Control + "a")
-                oButton.aElement.SendKeys(Keys.Delete)
-                oButton.aElement.SendKeys(strText)
-                mosaicDll.Logger(senderMCPAction, "Actual Result|Clicked " & sactionname, myLogPath, , actionHistoryRecordID)
+        <![CDATA[ Dim oLink As New AutomationObject
+            oLink.aObject = WaitForElement(driver, WaitForTime, By.Id(sFullNameID))
+            If Not oLink.aObject Is Nothing Then
+                oLink.aElement = DirectCast(oLink.aObject, IWebElement)
+                If oLink.aElement.Text = sFullName Then
+                    mosaicDll.Logger(senderMCPAction, "Actual Result|Full name matches", myLogPath, , actionHistoryRecordID)
+                Else
+                    mosaicDll.Logger(senderMCPAction, "Actual Result|Full name did not match", myLogPath, , actionHistoryRecordID)
+                End If
             Else
                 returnValues(0) = executionStatusFailed
-                returnValues(1) = CStr(returnValues(1)) & "Could not click button"
-                mosaicDll.Logger(senderMCPAction, "Actual Result|Could Not click: " & sactionname, myLogPath, , actionHistoryRecordID)
+                returnValues(1) = CStr(returnValues(1)) & "Could not click locate the full namne."
+                mosaicDll.Logger(senderMCPAction, "Actual Result|Could not click locate the full namne. ", myLogPath, , actionHistoryRecordID)
                 CaptureScreenshot(actionHistoryRecordID)
             End If]]>
       </Code>
